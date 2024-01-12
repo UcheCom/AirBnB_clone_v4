@@ -155,7 +155,7 @@ No known bugs yet at this time.
 
 ## Authors
 Uchenna Oko - [Github](https://github.com/uchecom) / [Twitter](https://twitter.com/Uchenna_Com001)  
- - [Github](https://github.com/) / [Twitter](https://twitter.com/)
+voskpaul - [Github](https://github.com/) / [Twitter](https://twitter.com/)
 
 ## License
 Public Domain. No copy write protection.
