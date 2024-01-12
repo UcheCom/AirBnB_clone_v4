@@ -1,4 +1,4 @@
-# AirBnB Clone - RESTful API
+# AirBnB Clone - Web Dynamic
 Team Project: AirBnB clone - Web Dynamic project is a collaboration between Uchenna Oko and Paul Njeru, students of Software Engineering of ALXSE program cohort 15. The console is the first segment of the AirBnB project that will collectively cover fundamental concepts of higher level programming track. We willimplement some of the features at this time- Web Dynamic. The goal of AirBnB project is to eventually deploy our server a simple copy of the AirBnB Website(HBnB). A command interpreter is created in this segment to manage objects for the AirBnB(HBnB) website.
 
 #### Functionalities of this command interpreter:
