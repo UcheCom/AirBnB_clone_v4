@@ -1,87 +1,38 @@
-$(document).ready(() => {
-  let amenities = [];
-  // sets the name of all previously ticked amenities
-  $(".amenities input[type='checkbox']").each(function () {
-    const ids = $(this).attr('data-id');
+$(document).ready(function () {
+  let checkedAmenities = {};
+  $(document).on('change', "input[type='checkbox']", function () {
     if (this.checked) {
-      amenities.push(ids);
+      checkedAmenities[$(this).data('id')] = $(this).data('name');
     } else {
-      if (amenities.includes(ids)) {
-        amenities = amenities.filter(val => val !== ids);
-      }
+      delete checkedAmenities[$(this).data('id')];
     }
-    $('.amenities h4').text(amenities.map(item => {
-      return $(`[data-id=${item}]`).attr('data-name');
-    }).join(', '));
-  });
-  // Add or remove  amenities from h4 depending on if it's checked or not
-  $(".amenities input[type='checkbox']").bind('change', function (e) {
-    const ids = $(e.target).attr('data-id');
-    if (e.target.checked) {
-      amenities.push(ids);
+    let lst = Object.values(checkedAmenities);
+    if (lst.length > 0) {
+      $('div.amenities > h4').text(Object.values(checkedAmenities).join(', '));
     } else {
-      if (amenities.includes(ids)) {
-        amenities = amenities.filter(val => val !== ids);
-      }
+      $('div.amenities > h4').html('&nbsp;');
     }
-    $('.amenities h4').text(amenities.map(item => {
-      return $(`[data-id=${item}]`).attr('data-name');
-    }).join(', '));
   });
-
-  $.ajax({
-    url: 'http://0.0.0.0:5001/api/v1/status/',
-    type: 'GET',
-    success: (res, status) => {
-      if (res.status === 'OK') {
+  $.get('http://0.0.0.0:5001/api/v1/status/', function (data, textStatus) {
+    if (textStatus === 'success') {
+      if (data.status === 'OK') {
         $('#api_status').addClass('available');
+      } else {
+        $('#api_status').removeClass('available');
       }
     }
   });
-
-  // fetch("http://0.0.0.0:5001/api/v1/status/",
-  //     {
-  //         method: 'GET',
-  //         headers: {
-  //             "Origin": window.origin,
-  //             "Refferer": window.document.baseURI,
-  //             'Content-Type': 'application/json',
-  //         },
-  //     }
-  // ).then(data => data.json()).then(stat => console.log(stat))
-
   $.ajax({
-    url: 'http://0.0.0.0:5001/api/v1/places_search/',
     type: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    url: 'http://0.0.0.0:5001/api/v1/places_search',
+    data: '{}',
     dataType: 'json',
-    data: JSON.stringify({}),
-    success: function (res, status) {
-      res.forEach(place => {
-        const article = document.createElement('article');
-        $(article).html(`
-                        <div class="title_box">
-                            <h2>${place.name}</h2>
-                            <div class="price_by_night">
-                            $${place.price_by_night}
-                            </div>
-                        </div>
-                    <div class="information">
-                        <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
-                        <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
-                        <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
-                    </div>
-                    <div class="user">
-                        
-                    </div>
-                    <div class="description">
-                        ${place.description === null ? 'No Description' : place.description}
-                    </div>`);
-        $('.places').append(article);
-      });
+    contentType: 'application/json',
+    success: function (data) {
+      for (let i = 0; i < data.length; i++) {
+        let place = data[i];
+        $('.places ').append('<article><h2>' + place.name + '</h2><div class="price_by_night"><p>$' + place.price_by_night + '</p></div><div class="information"><div class="max_guest"><div class="guest_image"></div><p>' + place.max_guest + '</p></div><div class="number_rooms"><div class="bed_image"></div><p>' + place.number_rooms + '</p></div><div class="number_bathrooms"><div class="bath_image"></div><p>' + place.number_bathrooms + '</p></div></div><div class="description"><p>' + place.description + '</p></div></article>');
+      }
     }
-
   });
 });
